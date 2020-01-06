@@ -28,3 +28,15 @@ Memory
     Zeek - 6 gig/core
     Logstash
     ElasticSearch
+
+
+/ - remaining
+/home - 10 G
+/var - 10 G
+/var/log - 2 G
+/tmp - 2 G
+/data/suricata
+/data/elasticsearch
+/data/steno
+/data/kafka
+/data/fsf
