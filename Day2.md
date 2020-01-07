@@ -127,3 +127,61 @@ Configrue Remainin interfaces
 	Check for double-gateway issue
 		System > routing:
 			Make sure there is not more than one gateway entry
+
+CentOS Networking 
+ip addr
+review information displated
+ip -4 addr -only show ipv4
+UP,Lower_UP, satae up
+
+ip cheathsheet 
+    ip addr
+            ip a show dev  enp0s3
+            ip a add x.x.x.x/24 dev xxx
+            ip a del x.x.x.x/24 dev xxx
+
+    ip link 
+        ip link show dev enp0s3
+        ip -s link
+        ip link set dev xxx up
+        ip link set dev xxx down
+        ip link set enpxxxx promisc on
+
+    ip route
+    
+    ip neigh
+        ip neigh show dev enp0s3
+
+Network Manager
+    systemctl status NetworkManager
+    nmcli devicese
+    nmtui 
+    sudo nmtui 
+
+Network scripts
+    ll /etc/sysconfig/network-scritps
+        BOOTPROTO="none" - static
+        IPADDRESS=x.x.x.x
+        PPREFIX=24
+        GATEWAY=x.x.x.x
+        DNS1=192.168.2.1
+        DNS2=172.16.2.1
+    systemctl restart network
+
+Disable IPv6
+    sysctl.conf
+    edit the config file to disable IPv6 on all interfaces
+        ```
+        sudo vi /etc/sysctl.conf
+        net.ipv6.conf.all.disable_ipv6 = 1
+        net.ipv6.conf.default.disable_ipv6 = 1
+        net.ipv6.conf.lo.disable_ipv6 = 1
+        ```
+    Load change from /etc/sysctl.conf file 'sudo sysctl -p`
+
+    host file
+    edit the host file to remove the ipv6 entry ::1
+    `sudo vi /etc/host'
+
+Firewalld - basic Usage
+
