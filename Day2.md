@@ -177,11 +177,29 @@ Disable IPv6
         net.ipv6.conf.default.disable_ipv6 = 1
         net.ipv6.conf.lo.disable_ipv6 = 1
         ```
-    Load change from /etc/sysctl.conf file 'sudo sysctl -p`
+    Load change from /etc/sysctl.conf file `sudo sysctl -p`
 
     host file
     edit the host file to remove the ipv6 entry ::1
     `sudo vi /etc/host'
 
 Firewalld - basic Usage
+    Open / allow traffic
+    `sudo firewall-cmd --zone=public --add-port ####/tcp` -- permanent
+    `sudo firewall-cmd --reload`
+    `sudo firewall-cmd --list-ports`
+    
+    Close / deny traffic 
+    sudo firewall-cmd --zone=public --remove-port=####/tcp --permanent
+    sudo firewall-cmd --reload
+
+    Commit all running firewall rules into the startup rules
+    sudo firewall-cmd --runtime-to-permanent
+
+    list all firewall zones
+    sudo firewall-cmd --list-all-zones
+
+Monitoring Activity
+
+`ss -lnt` (shows all lisening ports)
 
