@@ -203,3 +203,36 @@ Monitoring Activity
 
 `ss -lnt` (shows all lisening ports)
 
+Working With Repositories (local & Remote)
+
+On Sensor
+yum list
+yum repo list /etc/yum.repos.d
+
+Yum commands
+    `yum --help`
+    `yum install`
+    `yum update`
+    `yum search`
+    `yum provides` (searches through packages for a particular application and returns the results) 
+        `yum provides reposync`
+    `yum makecache fast` (first repository is cached/ fast = fastest speed)
+    `yum clean all` (deletes all local repo databases)
+    `yum history`
+    `yum history undo #` (undo a commnd in history)
+
+cd /etc/yum.repos.d
+
+[ ] -- Repo ID
+name= (discriptive name, can be duplicate)
+baseurl= (location of repo) (http:\\repo\localdirectory) local location /var/www/html/repos
+enable= (not required, 1 = enabled)
+gpgcheck= (create or download the keys, 0=off, 1=check)
+
+
+yum.conf (Changes are made globaly)
+/etc/yum.conf
+
+yum-config-manager --disable <Repository Name>
+yum-config-manager --enable <Repository Name>
+ 
