@@ -236,3 +236,31 @@ yum.conf (Changes are made globaly)
 yum-config-manager --disable <Repository Name>
 yum-config-manager --enable <Repository Name>
  
+
+ Create a yum repo
+    sudo vi /etc/yum.repos.d/local-yum.repo
+    :%s/repo/192.168.2.86/g
+    sudo yum clean
+
+    Install yum utils (rsync,) -- (Done on local machine)
+        yum install yum-utils
+        cd /srv/ --(like www and ok with selinux)
+        mkdir repos && cd repos
+        reopsyne -l --repoid=repositoyr_name --download_path=/repo/
+        reposync -l reopid=repository_name --download_path=/repo/ --newest-only --downloadcomps --download-metadata
+
+Yum downloader
+    yumdownloader suricata (downloads just a package repo)
+
+    repotrack -a ARCH -p /path/to/save/rmms packages (used to download every single rpm available in a repo because of th=time or space on disk bu you do nee all the dependancies for the rpm..  you can use a tool called `repotrack`)
+        repotrack -a x86_64 -p /var/www/repos/packages suricata zeek
+
+Createrepo
+    Now tht we have all the rpm's located on our box, we can use a tool called `createrepo`
+    This tool will create the needed databases so that yum knows how to handle them.
+    `yum install craterepo`
+
+    Create the databses file to make the local repo usable in the simplest form
+    `createrepo /repo/<repository_name>`
+
+    If we want to include the groups/comps we need to pass it the flag and name of the comps file.  It is almost always called `comps.xml` sometimes it can be called something else through. thing of note is tha you are not provideing a full path to the file bt rather just the name of the file     
