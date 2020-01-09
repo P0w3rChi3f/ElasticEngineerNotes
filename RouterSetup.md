@@ -83,3 +83,21 @@ Pass | Proto | Source | Dest
 #### Firewall > NAT > Outbound 
 Select the `disable` radio button
 
+### **Configure Remaining Interfaces**
+#### Assign
+1. Go to `Interface > Assignments
+1. Add em2 (OPT1)
+1. Add em3 (OPT2)
+1. Click `Save`
+
+#### Enable
+1. Click interface name in list  
+    a. e.g. `OPT1`
+1. `Enable` interface
+1. Ipv4 config type - `none`
+1. Ipv6 config type - `none`
+1. Click `Save`
+
+#### Check for double-gateway issue
+1. Go to `System > routing`  
+    a. make sure there is not more than one gateway entry
