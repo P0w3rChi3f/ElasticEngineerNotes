@@ -1,6 +1,7 @@
 # Switches
 
-`ll /dev` to look at devices 
+`ll /dev` to look at devices
+
 `screen` command in Linux provides the ability to launch and use multiple shell sessions from a single ssh session. 
 
 ## Switch Setup
