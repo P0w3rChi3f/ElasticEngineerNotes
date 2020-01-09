@@ -1,0 +1,84 @@
+# CentOS Networking
+`ip addr` is used to review information.  
+`ip -4 addr -only` shows IPv4 interface statuses  
+Interface states can be `Down`, `UP` or `Lower_UP`  
+
+## IP CheatSheet
+#### IP Addr
+`ip addr show dev enp03s` show only information from the enp0s3 interface.  
+`ip addr add x.x.x.x/24 dev xxx` sets and interface with a static IP.  
+`ip addr del x.x.x.x/24 dev xxx` deletes the static IP.
+
+#### IP Link
+`ip link show dev enp0s3` Displays information only for device enp0s3  
+`ip -s link` displays interface statistics  
+`ip link set dev xxx up` Brings link on xxx up.  
+`ip link set dev xxx down` Takes link on xxx down.  
+`ip link set enpxxxx promisc on` Sets link on xxx into promiscious mode.
+
+#### IP route  
+`ip route` List all of the route entries in the kernel.  
+`ip route add default via 192.168.1.1 dev em1` Add a default route (for all addresses) via the local gateway
+192.168.1.1 that can be reached on device em1.  
+`ip route add 192.168.1.0/24 via 192.168.1.1` Add a route to 192.168.1.0/24 via the gateway at 192.168.1.1  
+`ip route add 192.168.1.0/24 dev em1` Add a route to 192.168.1.0/24 that can be reached on device em1.
+
+#### IP Neigh
+`ip neigh` Display neighbour objects  
+`ip neigh show dev em1` Show the ARP cache for device em1
+
+#### Network Manager
+`systemctl status networkmanager`
+`nmcli devices`  
+`sudo nmtui`  
+
+#### Network Scripts  
+```
+ll /etc/sysconfig/network-scritps
+    BOOTPROTO="none" - static
+    IPADDRESS=x.x.x.x
+    PPREFIX=24
+    GATEWAY=x.x.x.x
+    DNS1=192.168.2.1
+    DNS2=172.16.2.1
+systemctl restart network
+```
+#### Disable IPv6  
+
+Edit the `sysctl.config` file to disable IPv6 on all interfaces.  
+    ```
+    sudo vi /etc/sysctl.conf
+    net.ipv6.conf.all.disable_ipv6 = 1
+    net.ipv6.conf.default.disable_ipv6 = 1
+    net.ipv6.conf.lo.disable_ipv6 = 1
+    ```  
+Load change from /etc/sysctl.conf file with `sudo sysctl -p`
+
+Edit the `host` file to remove the ipv6 entry ::1
+`sudo vi /etc/host`
+
+F#### Firewalld - basic Usage
+Open / allow traffic  
+```
+Sudo firewall-cmd --zone=public --add-port ####/tcp -- permanent  
+sudo firewall-cmd --reload  
+sudo firewall-cmd --list-ports
+```
+
+Close / deny traffic  
+```
+sudo firewall-cmd --zone=public --remove-port=####/tcp --permanent  
+sudo firewall-cmd --reload  
+```  
+
+Commit all running firewall rules into the startup rules  
+`sudo firewall-cmd --runtime-to-permanent`  
+
+list all firewall zones  
+`sudo firewall-cmd --list-all-zones`
+
+Monitoring Activity  
+`ss -lnt`  
+| ss | l | n | t |  
+|--- | --- | --- | --- |  
+| Display socket statistics | Listening Ports | Do not resolve addresses | TCP Only |  
