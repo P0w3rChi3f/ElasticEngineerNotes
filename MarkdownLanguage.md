@@ -8,8 +8,8 @@
 ######
 ###### header 6
 
-**Bold**
-_Bold_
+**Bold** 
+_Bold_ 
 *italic*
 
 __*Bold and Italic*__
@@ -28,6 +28,11 @@ ___this is the Same___
 
 [This is a text to render](http:192.188.2.11:8081/P0w3rChi3f)
 
+Column 1 | Column 2 | Column 3     //table format
+ ------------- | ------------- | ------------- 			//minimum of 3 hyphens
+ Text          | Text          | Text          
+
+
 `Code Higlighting`
 
     Tis is a code block
@@ -36,3 +41,6 @@ ___this is the Same___
 ```
 This is a code block as well
 ```
+
+
+[Emoji CheetSheet](https://www.webfx.com/tools/emoji-cheat-sheet/)
