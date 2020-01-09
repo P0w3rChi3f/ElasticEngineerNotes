@@ -1,8 +1,8 @@
-Install Stenographer
+# Install Stenographer
 ```
 sudo yum install stenographer
 ```
-Configure Stenographer
+## Configure Stenographer
 ```
 cd /etc/stenographer/
 ls
@@ -10,7 +10,7 @@ vi config
 
 ```
 
-Config file
+## Config file
 
 ```
 {
@@ -29,7 +29,7 @@ Config file
   , "CertPath": "/etc/stenographer/certs"
 }
 ```
-Certificates
+## Certificates
 ```
 sudo stenokeys.sh stenographer stenographer
 ll /data/

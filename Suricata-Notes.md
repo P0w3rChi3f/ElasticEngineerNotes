@@ -1,16 +1,16 @@
 # Install Suricata
 
-Inital Install
+## Inital Install
 ```
 yum install suricata
 ```
 
-Configure suricata
+## Configure suricata
 ```
 vi /etc/suricata/suricata.yaml
 ```
 
-Disable logs
+## Disable logs
 ```
 76       enabled: no
 291   - unified2-alert:
@@ -23,7 +23,7 @@ Disable logs
     404       enabled: no
 ```
 
-Default log dir
+## Default log dir
 ```
 suricata-update 
 suricata-update list-enabled-sources
@@ -31,13 +31,13 @@ suricata-update list-enabled-sources
 /var/lib/suricata/rules
 ```
 
-Edit sniffing interface
+## Edit sniffing interface
 ```
 vi /etc/sysconfig/suricata
 OPTIONS="--af-packet=enp0s2 --user suricata "
 ```
 
-Override Suricata yaml with our changes
+## Override Suricata yaml with our changes
 ```
 vi /etc/suricata/my-overides.yaml
 default-log-dir:/data/suricata
@@ -49,7 +49,7 @@ management - used to mantage tasks
 worker - used to tream, detet and output logs
 
 
-Sample CPU affinity settings  
+## Sample CPU affinity settings  
 ```
 threading: 
     set-cpu-affinigty: yes
@@ -72,7 +72,7 @@ processor : 6 physical id : 0 core id : 2
 processor : 7 physical id : 0 core id : 3
 
 
-Download Rules
+## Download Rules
 ```
 cd /usr/share/suricata/rules
 curl -L -O http://192.168.2.11:8009/suricata-5.0/emerging.rules.tar.gz  
