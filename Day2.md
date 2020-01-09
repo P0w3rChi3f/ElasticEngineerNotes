@@ -1,226 +1,28 @@
-Switches 
-    ll /dev to look at devices
-    screen
+# Working With Repositories (local & Remote)
 
-static routes
-config t
-ip route subnet dest
+## On Sensor
+`yum list`  
+`yum repo list /etc/yum.repos.d`
 
+#### Yum commands  
+```
+yum --help
+yum install
+yum update
+yum search  
+yum provides - Searches through packages for a particular application and returns the results  
+yum provides 
+reposync  
+yum makecache fast - First repository is cached/ fast = fastest speed  
+yum clean all - Deletes all local repo databases  
+yum history
+yum history undo # - undo a commnd in history
+```
 
-Chow port #9 
-Honeycutt/Jackson port #33
+#### Create a repo file
 
-Setup switch
-sudo vi /echssh/ssh_config
-    uncomment the lines that start with MAC's and Ciphers
-    hostkeyAlgorithms ssh-dss,ssh-rsa
-    kexAlgorithms +diffie-hellman-group1-sha1
-ssh perched@10.0.0.1
-perched1234!@#$
-
-Setup DHCP
-    ip dhcp excluded-address 10.0.x.1 10.0.x.1
-    ip dhcp pool <student Group>
-    network 10.0.x.0 255.255.255.252
-    default-router 10.0.x.1
-    dns-server 192.168.2.1
-    exit
-
-Setup VLans
-    vlan <SG#>
-    name <Student Group>
-    state active
-    no shut
-    exit
-
-Add interfaces
-    Interface Gig 1/0/x
-    switchport
-    switcchport access valn SG#
-    no shut
-    interface valna SG#
-    ip address 10.0.x.1 255.255.255.252
-    no shut
-    exit
-
-Enable Static Route
-    ip routing
-    ip rout 172.16.x.0 255.255.255.0 10.0.x.2
-
-Build router - need pfsense box (black box - mine is labelled SG01, 4 lan, 1 com, 2 usb, 1 vga), keyboard, thumbdrive, no mouse required
-	Boot from pfsense thumbdrive - plug in vga monitor before bootup
-Hardware setup
-	[Esc - enter BIOS setup]
-	F11 - boot menu					//I picked the first UEFI USB boot option (2 listed, plus general USB)
-Initial install
-	A - accept
-	I - install (OK) - default US keymap
-	Auto - Guided Disk Setup
-	...install runs…					//select default options
-	reboot
-
-Config PFSence
-
-| Lan4 | Lan 3| Lan 2 | Lan 1 | Com |
-| --- | --- | --- | --- | --- | 
-| en3 | en2 | en1 | en0 | local| 
-
-1- assign interface
-n - skip vlan setup
-en0 - wan
-en1 - lan interface
-(nothing to finish) - y - proceed
-
-2) Set interface IPs
-    1 - Wan Interface
-    y - dhcp
-    n - dhcpv6
-    blank for "none" y - http webconfig protocol
-    2 - LAN int
-    172.168.xx.1 /24
-    <enter> for none
-    <enter> for none disable IPv6
-    y - enable DHCP
-    172.16.x0.100 Range start
-    172.16.x0.254 reange end
-    y - http webconfig protocol
-
-set your lab machine to static ip 172.16.xx.10
-plug int the LAN interface (Lan2 on front face) and browse to 172.16.xx.1
-complete first login to web GUI
-
-admin:pfsence
-
-Wizard > Pfsence Setup > Genteral inormation
-set hostname SG## - pfsence localdomain - local.lan
-primary dns
-uncheck block private networks
-LAN IP address - 172.16.x.1
-subnet - 24
-set (and document new admin password) - Password01
-
-log back in
-dashboard overview
-top righ + and add:
-service status
-traffic graphs
-
-firewall> Rules
-secure out the box! default deny behairo
-firewall > rules > wan > add
-pass, proto=all, source=any, dest=any
-
-now disable NAT firewall > nat > outbound: disable radio button
-
-Configrue Remainin interfaces 
-    assign
-        interface > assignments
-        add em2 (OPT1)
-        add em3 (OPT2)
-        save
-    enable
-        Click interface name in list, e.g. OPT1
-		Enable interface
-		Ipv4 config type - none
-		Ipv6 config type - none
-		Save
-	Check for double-gateway issue
-		System > routing:
-			Make sure there is not more than one gateway entry
-
-CentOS Networking 
-ip addr
-review information displated
-ip -4 addr -only show ipv4
-UP,Lower_UP, satae up
-
-ip cheathsheet 
-    ip addr
-            ip a show dev  enp0s3
-            ip a add x.x.x.x/24 dev xxx
-            ip a del x.x.x.x/24 dev xxx
-
-    ip link 
-        ip link show dev enp0s3
-        ip -s link
-        ip link set dev xxx up
-        ip link set dev xxx down
-        ip link set enpxxxx promisc on
-
-    ip route
-    
-    ip neigh
-        ip neigh show dev enp0s3
-
-Network Manager
-    systemctl status NetworkManager
-    nmcli devicese
-    nmtui 
-    sudo nmtui 
-
-Network scripts
-    ll /etc/sysconfig/network-scritps
-        BOOTPROTO="none" - static
-        IPADDRESS=x.x.x.x
-        PPREFIX=24
-        GATEWAY=x.x.x.x
-        DNS1=192.168.2.1
-        DNS2=172.16.2.1
-    systemctl restart network
-
-Disable IPv6
-    sysctl.conf
-    edit the config file to disable IPv6 on all interfaces
-        ```
-        sudo vi /etc/sysctl.conf
-        net.ipv6.conf.all.disable_ipv6 = 1
-        net.ipv6.conf.default.disable_ipv6 = 1
-        net.ipv6.conf.lo.disable_ipv6 = 1
-        ```
-    Load change from /etc/sysctl.conf file `sudo sysctl -p`
-
-    host file
-    edit the host file to remove the ipv6 entry ::1
-    `sudo vi /etc/host'
-
-Firewalld - basic Usage
-    Open / allow traffic
-    `sudo firewall-cmd --zone=public --add-port ####/tcp` -- permanent
-    `sudo firewall-cmd --reload`
-    `sudo firewall-cmd --list-ports`
-    
-    Close / deny traffic 
-    sudo firewall-cmd --zone=public --remove-port=####/tcp --permanent
-    sudo firewall-cmd --reload
-
-    Commit all running firewall rules into the startup rules
-    sudo firewall-cmd --runtime-to-permanent
-
-    list all firewall zones
-    sudo firewall-cmd --list-all-zones
-
-Monitoring Activity
-
-`ss -lnt` (shows all lisening ports)
-
-Working With Repositories (local & Remote)
-
-On Sensor
-yum list
-yum repo list /etc/yum.repos.d
-
-Yum commands
-    `yum --help`
-    `yum install`
-    `yum update`
-    `yum search`
-    `yum provides` (searches through packages for a particular application and returns the results) 
-        `yum provides reposync`
-    `yum makecache fast` (first repository is cached/ fast = fastest speed)
-    `yum clean all` (deletes all local repo databases)
-    `yum history`
-    `yum history undo #` (undo a commnd in history)
-
+Per Repo Config
+```
 cd /etc/yum.repos.d
 
 [ ] -- Repo ID
@@ -228,39 +30,301 @@ name= (discriptive name, can be duplicate)
 baseurl= (location of repo) (http:\\repo\localdirectory) local location /var/www/html/repos
 enable= (not required, 1 = enabled)
 gpgcheck= (create or download the keys, 0=off, 1=check)
+```
 
-
-yum.conf (Changes are made globaly)
+Global Repo Config  
+```
 /etc/yum.conf
+[ ]
+name=
+baseurl=
+location=
+enable=
+gpgcheck=
+```
 
+Enable or Disable a repo
+```
 yum-config-manager --disable <Repository Name>
 yum-config-manager --enable <Repository Name>
- 
+```
 
- Create a yum repo
-    sudo vi /etc/yum.repos.d/local-yum.repo
-    :%s/repo/192.168.2.86/g
-    sudo yum clean
+#### Create a yum repo
+Modify a local repo to point somewhere else
+```
+sudo vi /etc/yum.repos.d/local-yum.repo
+:%s/repo/192.168.2.86/g
+sudo yum clean
+```
+Install yum utils (rsync,) -- (Done on local machine)  
+```
+yum install yum-utils
+cd /srv/ --(like www and ok with selinux)
+mkdir repos && cd repos
+reposync -l --repoid=repository_name --download_path=/repo/
+reposync -l reopid=repository_name --download_path=/repo/ --newest-only --downloadcomps --download-metadata
+```
 
-    Install yum utils (rsync,) -- (Done on local machine)
-        yum install yum-utils
-        cd /srv/ --(like www and ok with selinux)
-        mkdir repos && cd repos
-        reopsyne -l --repoid=repositoyr_name --download_path=/repo/
-        reposync -l reopid=repository_name --download_path=/repo/ --newest-only --downloadcomps --download-metadata
+#### Yum downloader
 
-Yum downloader
-    yumdownloader suricata (downloads just a package repo)
+`yumdownloader suricata` -  Downloads just a package repo  
+`repotrack -a ARCH -p /path/to/save/rmms packages` - Used to download every single rpm available in a repo because of the time or space on disk but you do need all the dependancies for the rpm..  you can use a tool called `repotrack`  
+`repotrack -a x86_64 -p /var/www/repos/packages suricata zeek`
 
-    repotrack -a ARCH -p /path/to/save/rmms packages (used to download every single rpm available in a repo because of th=time or space on disk bu you do nee all the dependancies for the rpm..  you can use a tool called `repotrack`)
-        repotrack -a x86_64 -p /var/www/repos/packages suricata zeek
+#### Createrepo
+This tool will create the needed databases so that yum knows how to handle them.  
+`yum install craterepo`
 
-Createrepo
-    Now tht we have all the rpm's located on our box, we can use a tool called `createrepo`
-    This tool will create the needed databases so that yum knows how to handle them.
-    `yum install craterepo`
+Create the databses file to make the local repo usable in the simplest form
+`createrepo /repo/<repository_name>`
 
-    Create the databses file to make the local repo usable in the simplest form
-    `createrepo /repo/<repository_name>`
+If we want to include the groups/comps we need to pass it the flag and name of the comps file.  It is almost always called `comps.xml` sometimes it can be called something else through. Thing of note is tha you are not provideing a full path to the file but rather just the name of the file.  
 
-    If we want to include the groups/comps we need to pass it the flag and name of the comps file.  It is almost always called `comps.xml` sometimes it can be called something else through. thing of note is tha you are not provideing a full path to the file bt rather just the name of the file     
+/////After Noon notes from Chow////////
+#### yum repolist results
+`yum repolist`  
+	local-WANdisco-git  
+	local-base  
+	local-elasticsearch-7.x  
+	local-epel  
+	local-extras  
+	local-rocknsm-2.5  
+	local-updates  
+	local-virtualbox  
+	local-zerotier  
+	localstuff  
+#### Repo Sync
+```
+reposync -l --repoid=repository_name --download_path=/reo/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-base --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-elasticsearch-7.x --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-WANdisco-git --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-epel --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-extras --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-rocknsm-2.5 --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-updates --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-virtualbox --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=local-zerotier --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+sudo reposync -l --repoid=localstuff --download_path=/srv/repos/ --newest-only --downloadcomps --download-metadata  
+```
+
+//warning --> running low on disk space on student laptop	//instructor is working on a fix, possibly use /home directory instead, but SELinux
+df -h									//or just resize the partitions??? - [Git Hub]  (https://gist.github.com/fernandoaleman/b607fe05c521fa00778e5b9c1c7678ed)  
+
+	Filesystem              Size  Used  Avail Use% Mounted on
+	/dev/mapper/centos-root   50G   50G  153M 100% /
+	devtmpfs                 3.9G     0  3.9G   0% /dev
+	tmpfs                    3.9G   16M  3.9G   1% /dev/shm
+	tmpfs                    3.9G   11M  3.9G   1% /run
+	tmpfs                    3.9G     0  3.9G   0% /sys/fs/cgroup
+	/dev/sda1               1014M  170M  845M  17% /boot
+	/dev/mapper/centos-home  180G 1015M  179G   1% /home
+	tmpfs                    786M  4.0K  786M   1% /run/user/42
+	tmpfs                    786M   52K  786M   1% /run/user/1000  
+
+Solution - bind mount to use disk space on /home  
+```
+sudo -s
+mkdir /home/srv
+mv  /srv/* /home/srv/
+ls /home/srv						//should have repos directory
+mount -o bind /home/srv/ /srv
+ls /srv							//should still have repos directory
+```
+```
+yum install createrepo	 
+yum install nginx  
+cd /srv/repos  
+ls			// view the various local repos  
+/srv/repos/local-base/comps.xml 
+```
+Note:relative path to comps.xml; creates the sql database; if no comps.xml provided, then remove “-g comps.xml” do this for all the repos (as shown below in small font)
+```
+createrepo -g comps.xml local-base/  
+ls /srv/repos/local-base/repodata			//should see various databases (e.g. sqlite.bz2, xml.gz, etc.)  
+cd /srv/repos  
+ls local-base  
+sudo createrepo -g comps.xml local-base/  
+ls local-elasticsearch-7.x  
+ls local-elasticsearch-7.x/7.5.1/  
+sudo createrepo local-elasticsearch-7.x  
+ls local-epel  
+sudo createrepo -g comps.xml local-epel  
+ls local-extras  
+ls local-extras/Packages  
+sudo createrepo local-extras  
+ls local-rocknsm-2.5  
+sudo createrepo local-rocknsm-2.5  
+ls localstuff  
+sudo createrepo localstuff  
+ls local-updates  
+ls local-updates/Packages  
+sudo createrepo local-updates  
+ls local-virtualbox  
+sudo createrepo local-virtualbox  
+ls local-WANdisco-git  
+sudo createrepo local-WANdisco-git  
+ls local-zerotier  
+sudo createrepo local-zerotier  
+```
+Become root, still allows logging (sudo -i OR sudo -s ⇒ one keeps shell variables); do not use [sudo - su root] (no logging)
+
+`sudo -s`						
+`sudo vi  /etc/nginx/conf.d/repo.conf`			//create conf file; spacing is for readability
+
+```
+	server {
+	  listen 8008;					//which port to bind to; default for satellite repos
+	
+	  location / {
+	    root /srv/repos;				//root directory starts here
+	    autoindex on;				//use internal indexer from nginx
+	    index index.html index.htm;		//multiple index files that can be served up
+	  }
+	error_page 500 502 503 504 /50.x.html;
+	location = /50x.html {
+	  root /usr/share/nginx/html;
+	  }
+	}  
+```
+
+systemctl restart nginx					//restart nginx
+ss -lnt								//verify port 8008 is listening - can access locally using curl
+curl localhost:8080						//should see html listing of repos
+sudo firewall-cmd --add-port=8008/tcp --permanent		//allow access from other machines
+sudo firewall-cmd --reload
+curl 192.168.2.86:8008					//test from remote sensor (e.g. sensor) - failed to connect - denied from SELinux
+								//not labelled as web file (currently either home or system file)
+cd /srv/
+ls -Z								//repos is unconfined object - tagged as var item, should be http context - need change context
+chcon -R -u system_u -t httpd_sys_content_t repos		//change context recursively
+ls -Z								//verify change in context
+systemctl restart nginx
+ss -lnt
+curl 192.168.2.94:8008					//test from remote sensor (e.g. sensor) - now works
+//2 steps for troubleshooting, not production environment, e.g. test SELK instead of FSF
+	systemctl stop firewalld				//See if firewall issue
+	setenforce 0						//With firewall still off, see if SELinux has context
+	setenforce 1						//turn back on
+	systemctl start firewalld				//turn back on
+	getenforce						//verify that back in enforcing mode (1), not permissive mode (0)
+Logon to pfsense: http://172.16.40.1/				//note: does not automatically turn on if loses power
+	Services → DNS resolver → add Host Overrides
+		Host: sg40					
+		Domain: local.lan			//make up something unique; remember what it is; local.lan not routed to internet
+		IP: 192.168.2.86				//repo laptop ip
+		Description: Repos on laptop
+		Save
+		Apply changes				//verify entry in host overrides
+		DNS Query Forwarding			//check the box if you want to be able to “ping repo” and get response from upstream DNS 
+Verify in sensor - dns1 and dns2 only setup in sensor
+	ssh cw2chow@172.162.100				//ssh into sensor
+	ping sg40						//ping does not work, need to change order of DNS
+	/etc/sysconfig/network-scripts/ifcfg-enp2s0	
+DNS1=172.16.40.1
+DNS2=192.168.2.1
+systemctl restart network
+ping sg40.local.lan					//for some reason, need to ping FQDN - issue on only some student configs...
+sudo vi /etc/hosts						//What if no dedicated hardware for DNS on sensor?
+	192.168.2.86 sg40 sg40.local.lan			//on mine, added “192.168.2.86 sg40” since couldn’t ping short name
+cat /etc/resolv.conf						//can view DNS servers; “search local.lan”
+vi /etc/inputrc							//disable inputrc
+	#set bell none						//if you uncomment the first line, then you lose the “d” key and “d” key becomes a bell
+								//ONLY uncomment the second line;      {SUDO,,} ⇒ bash shortcut to make lowercase
+bind -f /etc/inputrc						//binds the keys OR restart computer
+
+Replace IP in [baseurl=http://<repo_ip>/localstuff using %s		//missed morning class, so not sure about this %s stuff, so doing it manually...
+	sg40:80008							//lab is to figure it out on our own using knowledge from this morning
+sudo vi /etc/yum.repos.d/remote.repo
+[local-WANdisco-git]
+name=local-WANdisco-git
+baseurl=http://sg40:8008/local-WANdisco-git/
+enabled=1
+gpgcheck=0
+
+[local-base]
+name=local-base
+baseurl=http://sg40:8008/local-base/
+enabled=1
+gpgcheck=0
+
+[local-elasticsearch-7.x]
+name=local-elasticsearch-7.x
+baseurl=http://sg40:8008/local-elasticsearch-7.x/
+enabled=1
+gpgcheck=0
+
+[local-epel]
+name=local-epel
+baseurl=http://sg40:8008/local-epel/
+enabled=1
+gpgcheck=0
+
+[local-extras]
+name=local-extras
+baseurl=http://sg40:8008/local-extras/
+enabled=1
+gpgcheck=0
+
+[local-rocknsm-2.5]
+name=local-rocknsm-2.5
+baseurl=http://sg40:8008/local-rocknsm-2.5/
+enabled=1
+gpgcheck=0
+
+[local-updates]
+name=local-updates
+baseurl=http://sg40:8008/local-updates/
+enabled=1
+gpgcheck=0
+
+[local-virtualbox]
+name=local-virtualbox
+baseurl=http://sg40:8008/local-virtualbox/
+enabled=1
+gpgcheck=0
+
+[local-zerotier]
+name=local-zerotier
+baseurl=http://sg40:8008/local-zerotier/
+enabled=1
+gpgcheck=0
+
+[localstuff]
+name=localstuff
+baseurl=http://sg40:8008/localstuff/
+enabled=1
+gpgcheck=0	
+sudo mkdir ~/repo_backup				//backup Centos repos
+sudo cp -r C* ~/repo_backup/
+ls ~/repo_backup/
+cd /etc/yum.repos.d					//remove Centos repos
+sudo rm -f C*
+ls
+yum clean all						//update repos
+yum makecache fast					//no errors, so good to go!
+
+sudo vi /etc/nginx/conf.d/proxy.conf			//Add reverse proxy in nginx to resolve port	 ---  on the repo laptop
+	server {
+	  listen 80;					//default port 
+	  server_name sg40 sg40.local.lan repo
+	
+  proxy_max_temp_file_size 0;		//default limit is 1GB for nginx; set to unlimited
+	
+	  location / {
+	    proxy_set_header X-Real_IP $remote_addr;
+	    proxy_set_header Host $http_host;
+	    proxy_pass http://127.0.0.1:8008;
+	  }
+	}
+sudo vi /etc/yum.repos.d/remote.repo		//remove port numbers - sensor
+yum makecache fast					//errors as expected - sensor
+sudo systemctl restart nginx				//on repo laptop
+yum makecache fast					//still have errors - sensor - no route
+sudo firewall-cmd --add-port=80/tcp --permanent	//allow access from other machines
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-ports				
+	9200/tcp 9300/tcp 8008/tcp 80/tcp
+yum makecache fast					//sensor - now works
+
+TOMORROW - install suricata & stenographer
