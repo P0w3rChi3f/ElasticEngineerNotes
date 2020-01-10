@@ -5,4 +5,42 @@ Journalctl -xeu stenographer
 Error: not type given for **node** zeek
     vi /etc/zeek/node.cfg
 
-    
+
+## Troubleshooting install
+
+#### Check Stenographer Indicies
+```
+ls /data/steno
+ls /data/steno/thread0
+ls /data/steno/thread0/index
+systemctl status stenographer
+```
+
+#### Check Suricata
+```
+cd /data/suricata
+ll
+systemctl status suricata
+tcpdump -i enp2s0
+```
+
+#### Check Zeek
+```
+cd /data/zeek/current
+ls
+```
+
+Stop Zeek and current folder will be cleared
+```
+zeekctl stop
+```
+
+Check data format
+
+Comment out json script
+```
+vi /usr/share/zeek/site/local.zeek
+zeekctl stop
+zeekctl cleanup all
+zeekctl deploy
+```
