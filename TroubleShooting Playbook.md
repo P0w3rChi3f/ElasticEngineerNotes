@@ -44,3 +44,11 @@ zeekctl stop
 zeekctl cleanup all
 zeekctl deploy
 ```
+
+#### fsf gotcha
+```
+vi /usr/lib/systemd/system/fsf.service  
+```  
+__PIDFile=/run/fsf/fsf.pid__
+
+
