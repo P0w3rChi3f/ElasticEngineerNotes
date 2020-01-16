@@ -90,9 +90,9 @@ Zeek and kafka
 curl 172.16.90.100:9200/_cat/indicies
 zeekctl status
 ll /data/zeek/
-/usr/share/kafka/bin/kafka-topics.sh --list --bootstrap-sverer 172.16.90.100:9092
-/usr/share/kafka/bin/kafka-topics.sh --describe  --bootstrap-sverer 172.16.90.100:9092 -topic zeek-raw
-/usr/share/kafka/bin/kafka-console-consumer.sh --bootstrap-sverer 172.16.90.100:9092 -topic zeek-raw --from-beginning
+/usr/share/kafka/bin/kafka-topics.sh --list --bootstrap-server 172.16.90.100:9092
+/usr/share/kafka/bin/kafka-topics.sh --describe  --bootstrap-server 172.16.90.100:9092 -topic zeek-raw
+/usr/share/kafka/bin/kafka-console-consumer.sh --bootstrap-server 172.16.90.100:9092 -topic zeek-raw --from-beginning
 ```
 
 ```
@@ -101,3 +101,6 @@ cat /var/log/logstash/logstash-plain.log | grep error
 /usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/100-input-zeek.conf -t
 cat *zeek*
 ```
+
+
+
