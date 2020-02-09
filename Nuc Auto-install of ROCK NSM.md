@@ -141,6 +141,17 @@ Changed Xms3g to Xms1g and Xmx3g to Xmx1g.  Added -XX:-AssumeMP to line 38
 vi /etc/elasticsearch/jvm.options
 -Xms1g
 -Xmx1g  
+-XX:-AssumeMP
+```
+
+Enabled G1GC Configuration  
+
+```bash  
+vi /etc/elasticsearch/jvm.options
+10-:-XX:-UseConcMarkSweepGC
+10-:-XX:-UseCMSInitiatingOccupancyOnly
+10-:-XX:+UseG1GC
+10-:-XX:InitiatingHeapOccupancyPercent=75  
 ```
 
 If the install fails at any point it can be restared.  
