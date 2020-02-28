@@ -1,0 +1,26 @@
+[rocknsm_2_4]
+baseurl = https://packagecloud.io/rocknsm/2_4/el/7/$basearch
+cost = 750
+enabled = 1
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_4
+	file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
+metadata_expire = 300
+name = rocknsm_2_4
+repo_gpgcheck = 1
+sslcacert = /etc/pki/tls/certs/ca-bundle.crt
+sslverify = 1
+
+[rocknsm_2_4-source]
+baseurl = https://packagecloud.io/rocknsm/2_4/el/7/SRPMS
+cost = 750
+enabled = 1
+gpgcheck = 0
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-pkgcloud-2_4
+	file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RockNSM-2
+metadata_expire = 300
+name = rocknsm_2_4-source
+repo_gpgcheck = 1
+sslcacert = /etc/pki/tls/certs/ca-bundle.crt
+sslverify = 1
+

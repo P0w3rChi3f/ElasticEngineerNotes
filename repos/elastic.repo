@@ -1,0 +1,6 @@
+[elastic-7]
+baseurl = https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck = 0
+gpgkey = https://artifacts.elastic.co/GPG-KEY-elasticsearch
+name = Elastic Stack repository for 7.x
+
