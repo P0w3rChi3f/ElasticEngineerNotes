@@ -1,6 +1,7 @@
 # Beat References
 
 ## MAC - Brew install  
+
 [Directory Layout](https://www.elastic.co/guide/en/beats/filebeat/7.7/directory-layout.html#_brew)  
 
 **Type** | **Description** | **Location**  
