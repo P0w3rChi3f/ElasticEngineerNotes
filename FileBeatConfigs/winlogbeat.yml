@@ -30,6 +30,10 @@ winlogbeat.event_logs:
           id: security
           file: ${path.home}/module/security/config/winlogbeat-security.js
 
+  - name: Microsoft-Windows-Windows Defender/Operational
+
+  - name: Microsoft-Windows-Windows Firewall With Advanced Security/Firewall
+
   - name: Microsoft-Windows-Sysmon/Operational
     processors:
       - script:
@@ -40,7 +44,7 @@ winlogbeat.event_logs:
 #==================== Elasticsearch template settings ==========================
 
 setup.template.settings:
-  index.number_of_shards: 1
+  index.number_of_shards: 3
   #index.codec: best_compression
   #_source.enabled: false
 
@@ -53,7 +57,7 @@ setup.template.settings:
 
 # The tags of the shipper are included in their own field with each
 # transaction published.
-#tags: ["service-X", "web-tier"]
+tags: ["Jay-Windows"]
 
 # Optional fields that you can specify to add additional information to the
 # output.
@@ -83,7 +87,7 @@ setup.kibana:
   # Scheme and port can be left out and will be set to the default (http and 5601)
   # In case you specify and additional path, the scheme is required: http://localhost:5601/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
-  host: "10.4.1.187:5601"
+  host: "10.4.1.187"
 
   # Kibana Space ID
   # ID of the Kibana Space into which the dashboards should be loaded. By default,
@@ -117,13 +121,13 @@ output.elasticsearch:
 
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
-  username: "jay"
-  password: "rival outshine crown kissing"
+  username: "elastic"
+  password: "elastic"
 
 #----------------------------- Logstash output --------------------------------
 #output.logstash:
   # The Logstash hosts
-  #hosts: ["localhost:5044"]
+  #hosts: ["10.4.1.187:5044"]
 
   # Optional SSL. By default is off.
   # List of root certificates for HTTPS server verifications
