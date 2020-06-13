@@ -1,9 +1,11 @@
 # Repos needed
 
+```zsh
 curl -s https://packagecloud.io/install/repositories/rocknsm/2_5/script.rpm.sh | sudo bash  
 yum -y install epel-release
 touch /etc/yum.repos.d/elasticsearch.repo
-rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch  
+rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+```
 
 vi /etc/yum.repos.d/elasticsearch.repo  
 
